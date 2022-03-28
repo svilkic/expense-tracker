@@ -2,10 +2,16 @@
   width: 100%;
   margin: auto;
 }
-.container form {
+.form {
   display: flex;
   gap: 1rem;
   flex-direction: column;
+  transition: max-height 100ms;
+  overflow: hidden;
+  max-height: 500px;
+}
+.hidden {
+  max-height: 0;
 }
 
 .container textarea {

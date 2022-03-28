@@ -1,5 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
+// Components
+import { ExpenseItem } from "./expenseItem";
+import { Title } from "components/expenseTracker/ui/title";
 // Styles
 import styles from "./expenseList.module.css";
 
@@ -7,10 +10,10 @@ export function ExpenseList() {
   const { expenseList } = useSelector((state) => state.expenses);
   return (
     <div className={styles.container}>
-      <h3>Expense List</h3>
+      <Title title="Expense List" />
       <ul className={styles.list}>
         {expenseList.map((expense) => (
-          <li key={expense.id}>{expense.title}</li>
+          <ExpenseItem key={expense.id} expense={expense} />
         ))}
       </ul>
     </div>

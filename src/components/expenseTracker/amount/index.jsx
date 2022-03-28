@@ -10,7 +10,7 @@ export function ExpenseAmount({}) {
   return (
     <div className={styles.container}>
       <p>
-        {formatAmount}
+        {formatAmount} &nbsp;
         {process.env.REACT_APP_CURRENCY}
       </p>
     </div>
