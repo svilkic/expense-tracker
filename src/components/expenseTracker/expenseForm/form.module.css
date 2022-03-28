@@ -1,0 +1,13 @@
+.container {
+  width: 100%;
+  margin: auto;
+}
+.container form {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.container textarea {
+  max-width: 100%;
+}
