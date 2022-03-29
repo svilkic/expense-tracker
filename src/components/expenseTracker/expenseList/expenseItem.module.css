@@ -8,10 +8,25 @@
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  width: 100%;
+}
+.text {
   transition: all 300ms;
 }
-.title:hover {
+.text:hover {
   opacity: 0.5;
+}
+.delete {
+  transition: all 500ms;
+}
+.delete:hover {
+  color: var(--color-error);
+}
+.text {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-right: 1rem;
 }
 .info {
   display: flex;

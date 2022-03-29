@@ -1,11 +1,11 @@
 import { expenceReducer } from "./slices/expenseSlice";
-import { themeReducer } from "./slices/themeSlice";
+import { uiReducer } from "./slices/uiSlice";
 
 const { configureStore } = require("@reduxjs/toolkit");
 
 const reducer = {
   expenses: expenceReducer,
-  theme: themeReducer,
+  ui: uiReducer,
 };
 
 export const store = configureStore({

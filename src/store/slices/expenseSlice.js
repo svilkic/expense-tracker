@@ -9,6 +9,7 @@ const initialState = {
   ],
 };
 
+//Get epxenses
 export const fetchExpenses = createAsyncThunk(
   "expenses/fetchExpensesByDate",
   async (month, thunkAPI) => {
@@ -19,6 +20,7 @@ export const fetchExpenses = createAsyncThunk(
   }
 );
 
+//Add Expense
 export const addExpense = createAsyncThunk(
   "expenses/addExpense",
   async (expense, thunkAPI) => {
@@ -34,6 +36,26 @@ export const addExpense = createAsyncThunk(
     localStorage.setItem("amount", calculatedAmount);
 
     return { expenseList: existing, amount: calculatedAmount };
+  }
+);
+
+//Delete expense
+export const deleteExpense = createAsyncThunk(
+  "expenses/deleteExpense",
+  async (id, thunkAPI) => {
+    //Get items from storage
+    let expenseList = JSON.parse(localStorage.getItem("expensesList"));
+    //Find expense
+    let index = expenseList.findIndex((expense) => expense.id === id);
+    //Remove from list
+    expenseList.splice(index, 1);
+    //Calculate new amount
+    let calculatedAmount = calculateAmount(expenseList);
+    //Save items and amount
+    localStorage.setItem("expensesList", JSON.stringify(expenseList));
+    localStorage.setItem("amount", calculatedAmount);
+
+    return { expenseList, amount: calculatedAmount };
   }
 );
 
@@ -54,11 +76,18 @@ const expenseSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    //Get All
     builder.addCase(fetchExpenses.fulfilled, (state, action) => {
       state.expenseList = action.payload.expenseList;
       state.amount = action.payload.amount;
     });
+    //Add
     builder.addCase(addExpense.fulfilled, (state, action) => {
+      state.amount = action.payload.amount;
+      state.expenseList = action.payload.expenseList;
+    });
+    //Delete
+    builder.addCase(deleteExpense.fulfilled, (state, action) => {
       state.amount = action.payload.amount;
       state.expenseList = action.payload.expenseList;
     });
@@ -66,7 +95,6 @@ const expenseSlice = createSlice({
 });
 
 const calculateAmount = (list) => {
-  console.log(list);
   return list.reduce((sum, obj) => (sum += obj.amount), 0);
 };
 

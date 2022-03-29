@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  align-items: center;
+}
+.container select {
+  min-width: 5rem;
+}

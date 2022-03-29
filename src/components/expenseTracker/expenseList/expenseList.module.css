@@ -8,3 +8,6 @@
   flex-direction: column;
   gap: 0.2rem;
 }
+.hidden {
+  display: none;
+}

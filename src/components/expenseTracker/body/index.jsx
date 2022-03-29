@@ -1,5 +1,6 @@
 import React from "react";
-import ExpenseForm from "../expenseForm";
+import { ExpenseChart } from "../expenseChart";
+import { ExpenseForm } from "../expenseForm";
 import { ExpenseList } from "../expenseList";
 // Styles
 import styles from "./body.module.css";
@@ -9,6 +10,7 @@ export function ExpenseBody() {
     <div className={styles.container}>
       <ExpenseForm />
       <ExpenseList />
+      <ExpenseChart />
     </div>
   );
 }

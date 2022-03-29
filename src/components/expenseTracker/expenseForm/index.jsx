@@ -12,13 +12,16 @@ import styles from "./form.module.css";
 
 const todayDate = new Date().toISOString().split("T")[0];
 
-export default function ExpenseForm() {
+export function ExpenseForm() {
   const dispatch = useDispatch();
   const [amount, setAmount] = useState(0);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(todayDate);
-  const [category, setCategory] = useState(categories[0].name);
+  const [category, setCategory] = useState({
+    name: categories[0].name,
+    color: categories[0].color,
+  });
 
   const [isHidden, setIsHidden] = useState(true);
   const [error, setError] = useState("");
@@ -38,7 +41,8 @@ export default function ExpenseForm() {
       amount,
       title,
       description,
-      category,
+      category: category.name,
+      categoryColor: category.color,
       date,
     };
     dispatch(addExpense(newExpense));
@@ -52,9 +56,18 @@ export default function ExpenseForm() {
     setDescription("");
   };
 
+  const setCategoryHandler = (e) => {
+    const category = categories.find((c) => c.id === e.target.value);
+    setCategory(category);
+  };
+
   return (
     <div className={styles.container}>
-      <Title title="Add Experience" onClick={() => setIsHidden(!isHidden)} />
+      <Title
+        title="Add Experience"
+        hidden={isHidden}
+        onClick={() => setIsHidden(!isHidden)}
+      />
       {error ? <p className="error">{error}</p> : undefined}
       <form
         className={`${styles.form} ${isHidden ? styles.hidden : ""}`}
@@ -85,15 +98,11 @@ export default function ExpenseForm() {
             setAmount(parseInt(e.target.value));
           }}
         />
-        <select
-          id="category"
-          value={category}
-          onChange={(e) => {
-            setCategory(e.target.value);
-          }}
-        >
+        <select id="category" onChange={setCategoryHandler}>
           {categories.map((cat) => (
-            <option key={cat.id}>{cat.name}</option>
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
           ))}
         </select>
         <input
@@ -101,7 +110,6 @@ export default function ExpenseForm() {
           value={date}
           onChange={(e) => {
             setDate(e.target.value);
-            console.log(e.target.value);
           }}
         />
         <input type="submit" value="Add Expense" />
