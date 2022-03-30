@@ -9,10 +9,11 @@ export function ExpenseAmount({}) {
   const formatAmount = amount.toFixed(2);
   return (
     <div className={styles.container}>
-      <p>
+      <h3 className={styles.title}>Amount Spent:</h3>
+      <h2 className={styles.amount}>
         {formatAmount} &nbsp;
         {process.env.REACT_APP_CURRENCY}
-      </p>
+      </h2>
     </div>
   );
 }

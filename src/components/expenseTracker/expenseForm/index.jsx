@@ -84,11 +84,12 @@ export function ExpenseForm() {
         />
         <textarea
           id="description"
-          placeholder="Description *"
+          placeholder="Description "
           value={description}
           onChange={(e) => {
             setDescription(e.target.value);
           }}
+          maxLength={300}
         />
         <input
           id="price"

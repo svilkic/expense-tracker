@@ -30,6 +30,7 @@ export function ExpenseItem({ expense }) {
           <span>{expense.title}</span>
           <span>
             {expense.amount}
+            &nbsp;
             {process.env.REACT_APP_CURRENCY}
           </span>
         </div>

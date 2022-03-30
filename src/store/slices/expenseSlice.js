@@ -1,21 +1,32 @@
 import { createSlice, current, createAsyncThunk } from "@reduxjs/toolkit";
+import { filterArrayByDate } from "util/helpers";
 
 const initialState = {
   amount: 0,
-  income: 0,
-  expense: 0,
-  expenseList: [
-    { id: 1, title: "Title", description: "", amount: 150, category: "hrana" },
-  ],
+  //income: 0,
+  //expense: 0,
+  expenseList: [],
+  fetching: true,
 };
 
-//Get epxenses
+//Get all epxenses
 export const fetchExpenses = createAsyncThunk(
   "expenses/fetchExpensesByDate",
-  async (month, thunkAPI) => {
+  async (thunkAPI) => {
     let existing = localStorage.getItem("expensesList");
     let amount = parseFloat(localStorage.getItem("amount")) || 0;
     existing = existing ? JSON.parse(existing) : [];
+    return { expenseList: existing, amount };
+  }
+);
+
+//Get epxenses by date
+export const fetchExpensesByDate = createAsyncThunk(
+  "expenses/fetchExpensesByDate",
+  async ({ month, year }) => {
+    let existing = JSON.parse(localStorage.getItem("expensesList")) || [];
+    existing = filterArrayByDate(existing, month, year);
+    let amount = calculateAmount(existing);
     return { expenseList: existing, amount };
   }
 );
@@ -63,23 +74,21 @@ const expenseSlice = createSlice({
   name: "expense",
   initialState,
   reducers: {
-    addExpense(state, action) {
-      // const { payload } = action;
-      // const { expenseList, amount } = payload;
-      // const list = [...current(state).expenseList, action.payload];
-      // state.amount = amount;
-      // // state.amount += payload.amount;
-      // state.expenseList.push(expenseList);
-    },
-    remove(state, action) {
-      const { payload } = action;
+    setFetch: (state, action) => {
+      state.fetching = false;
     },
   },
   extraReducers: (builder) => {
-    //Get All
-    builder.addCase(fetchExpenses.fulfilled, (state, action) => {
+    //Get
+    builder.addCase(fetchExpensesByDate.fulfilled, (state, action) => {
       state.expenseList = action.payload.expenseList;
       state.amount = action.payload.amount;
+      state.fetching = false;
+      console.log("done fetching");
+    });
+    builder.addCase(fetchExpensesByDate.pending, (state, action) => {
+      state.fetching = true;
+      console.log("fetching...");
     });
     //Add
     builder.addCase(addExpense.fulfilled, (state, action) => {
@@ -98,5 +107,5 @@ const calculateAmount = (list) => {
   return list.reduce((sum, obj) => (sum += obj.amount), 0);
 };
 
-// export const { addExpense } = expenseSlice.actions;
+export const { setFetch } = expenseSlice.actions;
 export const expenceReducer = expenseSlice.reducer;

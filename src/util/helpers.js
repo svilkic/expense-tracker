@@ -15,16 +15,31 @@ export function groupBy(array, key) {
     return rv;
   }, {});
 }
-
+//value[key] = array[i].category
+//value = array[i]
 export function groupByAndSum(array, key) {
   var result = [];
+  //debugger;
   array.reduce(function (res, value) {
     if (!res[value[key]]) {
-      res[value[key]] = { category: value[key], amount: 0 };
+      res[value[key]] = {
+        title: value[key],
+        value: 0,
+        color: value.categoryColor,
+      };
       result.push(res[value[key]]);
     }
-    res[value[key]].amount += value.amount;
+    res[value[key]].value += value.amount;
     return res;
   }, {});
   return result;
+}
+
+export function filterArrayByDate(array, month, year) {
+  return array.filter((expense) => {
+    const expenseDate = new Date(expense.date);
+    const expenseMonth = expenseDate.getMonth() + 1;
+    const expenseYear = expenseDate.getFullYear();
+    if (expenseMonth === month && expenseYear === year) return expense;
+  });
 }

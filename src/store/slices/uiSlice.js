@@ -9,11 +9,11 @@ const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
-    change(state) {
+    changeDark(state) {
       state.dark = !state.dark;
     },
   },
 });
 
-export const { change } = uiSlice.actions;
+export const { changeDark } = uiSlice.actions;
 export const uiReducer = uiSlice.reducer;

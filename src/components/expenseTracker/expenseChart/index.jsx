@@ -1,16 +1,30 @@
 import React, { useState } from "react";
 import { Title } from "../ui/title";
-// Styles
-import styles from "./expenseChart.module.css";
 import { PieChart } from "react-minimal-pie-chart";
 import { useSelector } from "react-redux";
 import { groupByAndSum } from "util/helpers";
+import { useMemo } from "react";
+import { PiLegend, MemoizedLegend } from "./PiLegend";
+// Styles
+import styles from "./expenseChart.module.css";
+import { useEffect } from "react";
 
 export function ExpenseChart() {
   const [isHidden, setIsHidden] = useState(true);
   const { expenseList } = useSelector((state) => state.expenses);
-  const grouped = groupByAndSum(expenseList, "category");
-  console.log(grouped);
+
+  //OPTIMIZE
+  const grouped = useMemo(() => {
+    if (expenseList.length > 0)
+      return groupByAndSum(expenseList, "category").sort(
+        (a, b) => b.value - a.value
+      );
+    return [];
+  }, [expenseList]);
+
+  useEffect(() => {
+    console.log("re-render");
+  });
 
   return (
     <div className={styles.container}>
@@ -23,12 +37,17 @@ export function ExpenseChart() {
       />
       <div className={`${styles.chart} ${isHidden ? styles.hidden : ""}`}>
         <PieChart
-          data={[
-            { title: "One", value: 10, color: "#E38627" },
-            { title: "Two", value: 15, color: "#C13C37" },
-            { title: "Three", value: 20, color: "#6A2135" },
-          ]}
+          className={styles.pychart}
+          label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}% `}
+          labelStyle={{
+            fontSize: "0.5rem",
+          }}
+          lineWidth={60}
+          labelPosition={112}
+          data={grouped}
+          text="aleksa"
         />
+        <MemoizedLegend data={grouped} />
       </div>
     </div>
   );
