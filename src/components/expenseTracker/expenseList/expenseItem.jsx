@@ -11,9 +11,9 @@ export function ExpenseItem({ expense }) {
   const dispatch = useDispatch();
   const [isHidden, setIsHidden] = useState(true);
 
-  const deleteExpenseHandler = (id) => {
+  const deleteExpenseHandler = (expense) => {
     if (window.confirm("Are you sure you want to delete epxense?")) {
-      dispatch(deleteExpense(id));
+      dispatch(deleteExpense({ id: expense.id, date: expense.date }));
     }
   };
 
@@ -38,7 +38,7 @@ export function ExpenseItem({ expense }) {
           className={`${styles.delete} ${
             isHidden ? styles.hidden : styles.show
           }`}
-          onClick={() => deleteExpenseHandler(expense.id)}
+          onClick={() => deleteExpenseHandler(expense)}
         >
           <MdDelete />
         </div>

@@ -43,3 +43,14 @@ export function filterArrayByDate(array, month, year) {
     if (expenseMonth === month && expenseYear === year) return expense;
   });
 }
+
+export const getDateFromExpense = (expense) => {
+  const date = new Date(expense.date);
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  return { month, year };
+};
+
+export const calculateAmount = (list) => {
+  return list.reduce((sum, obj) => (sum += obj.amount), 0);
+};

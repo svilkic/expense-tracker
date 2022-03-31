@@ -9,11 +9,14 @@ import { Title } from "components/expenseTracker/ui/title";
 import { categories } from "constants/categories";
 // Styles
 import styles from "./form.module.css";
+import { useRef } from "react";
 
 const todayDate = new Date().toISOString().split("T")[0];
 
 export function ExpenseForm() {
   const dispatch = useDispatch();
+  const titleRef = useRef();
+
   const [amount, setAmount] = useState(0);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -47,6 +50,7 @@ export function ExpenseForm() {
     };
     dispatch(addExpense(newExpense));
     clearForm();
+    titleRef.current.focus();
   };
 
   const clearForm = () => {
@@ -74,6 +78,7 @@ export function ExpenseForm() {
         onSubmit={formSubmit}
       >
         <input
+          ref={titleRef}
           id="title"
           type="text"
           placeholder="Title *"

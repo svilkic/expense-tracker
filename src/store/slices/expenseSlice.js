@@ -1,5 +1,16 @@
 import { createSlice, current, createAsyncThunk } from "@reduxjs/toolkit";
-import { filterArrayByDate } from "util/helpers";
+import {
+  calculateAmount,
+  filterArrayByDate,
+  getDateFromExpense,
+} from "util/helpers";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  db,
+  getDataByDate as getDataByDateFirebase,
+  addExpense as addExpenseFirebase,
+  removeExpense as removeExpenseFirebase,
+} from "config/firebase";
 
 const initialState = {
   amount: 0,
@@ -24,49 +35,40 @@ export const fetchExpenses = createAsyncThunk(
 export const fetchExpensesByDate = createAsyncThunk(
   "expenses/fetchExpensesByDate",
   async ({ month, year }) => {
-    let existing = JSON.parse(localStorage.getItem("expensesList")) || [];
-    existing = filterArrayByDate(existing, month, year);
-    let amount = calculateAmount(existing);
-    return { expenseList: existing, amount };
+    //Firebase
+    const { amount, expenseList } = await getDataByDateFirebase(month, year);
+    //Local
+    //const expenseList = getDataByDateLocal(month, year);
+
+    let data = filterArrayByDate(expenseList, month, year);
+    //Local
+    //let amount = calculateAmount(data);
+    return { expenseList: data, amount };
   }
 );
 
 //Add Expense
 export const addExpense = createAsyncThunk(
   "expenses/addExpense",
-  async (expense, thunkAPI) => {
-    //Get items from storage
-    let existing = localStorage.getItem("expensesList");
-    existing = existing ? JSON.parse(existing) : [];
-    //Add new item
-    existing.push(expense);
-    //Calculate new amount
-    let calculatedAmount = calculateAmount(existing);
-    //Save items and amount
-    localStorage.setItem("expensesList", JSON.stringify(existing));
-    localStorage.setItem("amount", calculatedAmount);
+  async (expense) => {
+    //Firebase
+    const { expenseList, amount } = await addExpenseFirebase(expense);
+    //Local
+    //const { expenseList, amount } = addExpenseLocal(expense);
 
-    return { expenseList: existing, amount: calculatedAmount };
+    return { expenseList, amount: amount };
   }
 );
 
 //Delete expense
 export const deleteExpense = createAsyncThunk(
   "expenses/deleteExpense",
-  async (id, thunkAPI) => {
-    //Get items from storage
-    let expenseList = JSON.parse(localStorage.getItem("expensesList"));
-    //Find expense
-    let index = expenseList.findIndex((expense) => expense.id === id);
-    //Remove from list
-    expenseList.splice(index, 1);
-    //Calculate new amount
-    let calculatedAmount = calculateAmount(expenseList);
-    //Save items and amount
-    localStorage.setItem("expensesList", JSON.stringify(expenseList));
-    localStorage.setItem("amount", calculatedAmount);
-
-    return { expenseList, amount: calculatedAmount };
+  async (expense) => {
+    //Firebase
+    const { expenseList, amount } = await removeExpenseFirebase(expense);
+    //Local
+    //const { expenseList, amount } = removeDataLocal(expense);
+    return { expenseList, amount };
   }
 );
 
@@ -84,11 +86,14 @@ const expenseSlice = createSlice({
       state.expenseList = action.payload.expenseList;
       state.amount = action.payload.amount;
       state.fetching = false;
-      console.log("done fetching");
     });
     builder.addCase(fetchExpensesByDate.pending, (state, action) => {
       state.fetching = true;
-      console.log("fetching...");
+    });
+    builder.addCase(fetchExpensesByDate.rejected, (state, action) => {
+      state.fetching = false;
+      state.amount = 0;
+      state.expenseList = [];
     });
     //Add
     builder.addCase(addExpense.fulfilled, (state, action) => {
@@ -103,8 +108,41 @@ const expenseSlice = createSlice({
   },
 });
 
-const calculateAmount = (list) => {
-  return list.reduce((sum, obj) => (sum += obj.amount), 0);
+const getDataLocal = () => {
+  let data = localStorage.getItem("expensesList");
+  data = data ? JSON.parse(data) : [];
+  return data;
+};
+
+const getDataByDateLocal = (month, year) => {
+  let data = JSON.parse(localStorage.getItem("expensesList")) || [];
+  data = filterArrayByDate(data, month, year);
+  return data;
+};
+
+const addExpenseLocal = (expense) => {
+  const { month, year } = getDateFromExpense(expense);
+  let existing = getDataLocal();
+  existing.push(expense);
+  let calculatedAmount = calculateAmount(existing);
+  localStorage.setItem("expensesList", JSON.stringify(existing));
+  localStorage.setItem("amount", calculatedAmount);
+  let data = getDataByDateLocal(month, year);
+  let amount = calculateAmount(data);
+  return { expenseList: data, amount };
+};
+
+const removeDataLocal = (expense) => {
+  const expenseID = expense.id;
+  let expenseList = getDataLocal();
+  let index = expenseList.findIndex((expense) => expense.id === expenseID);
+  expenseList.splice(index, 1);
+  let calculatedAmount = calculateAmount(expenseList);
+  localStorage.setItem("expensesList", JSON.stringify(expenseList));
+  localStorage.setItem("amount", calculatedAmount);
+  const { month, year } = getDateFromExpense(expense);
+  expenseList = getDataByDateLocal(month, year);
+  return { expenseList, amount: calculatedAmount };
 };
 
 export const { setFetch } = expenseSlice.actions;

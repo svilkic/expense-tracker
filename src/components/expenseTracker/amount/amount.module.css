@@ -11,3 +11,6 @@
   font-family: sans-serif;
   color: var(--color-primary);
 }
+.spinner {
+  font-size: 0.2rem;
+}

@@ -8,10 +8,11 @@ import { PiLegend, MemoizedLegend } from "./PiLegend";
 // Styles
 import styles from "./expenseChart.module.css";
 import { useEffect } from "react";
+import { Spinner } from "../ui/spinner";
 
 export function ExpenseChart() {
   const [isHidden, setIsHidden] = useState(true);
-  const { expenseList } = useSelector((state) => state.expenses);
+  const { expenseList, fetching } = useSelector((state) => state.expenses);
 
   //OPTIMIZE
   const grouped = useMemo(() => {
@@ -22,10 +23,6 @@ export function ExpenseChart() {
     return [];
   }, [expenseList]);
 
-  useEffect(() => {
-    console.log("re-render");
-  });
-
   return (
     <div className={styles.container}>
       <Title
@@ -35,20 +32,23 @@ export function ExpenseChart() {
           setIsHidden((prev) => !prev);
         }}
       />
-      <div className={`${styles.chart} ${isHidden ? styles.hidden : ""}`}>
-        <PieChart
-          className={styles.pychart}
-          label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}% `}
-          labelStyle={{
-            fontSize: "0.5rem",
-          }}
-          lineWidth={60}
-          labelPosition={112}
-          data={grouped}
-          text="aleksa"
-        />
-        <MemoizedLegend data={grouped} />
-      </div>
+      {!fetching && (
+        <div className={`${styles.chart} ${isHidden ? styles.hidden : ""}`}>
+          <PieChart
+            className={styles.pychart}
+            label={({ dataEntry }) => `${Math.round(dataEntry.percentage)}% `}
+            labelStyle={{
+              fontSize: "0.5rem",
+            }}
+            lineWidth={60}
+            labelPosition={112}
+            data={grouped}
+            text="aleksa"
+          />
+          <MemoizedLegend data={grouped} />
+        </div>
+      )}
+      {fetching && <Spinner />}
     </div>
   );
 }

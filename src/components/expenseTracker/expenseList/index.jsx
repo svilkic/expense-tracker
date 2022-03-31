@@ -5,23 +5,25 @@ import { ExpenseItem } from "./expenseItem";
 import { Title } from "components/expenseTracker/ui/title";
 import { Spinner } from "components/expenseTracker/ui/spinner";
 import { Pagination } from "./pagination";
+import { usePaging } from "hooks/usePaging";
 // Styles
 import styles from "./expenseList.module.css";
+import { useEffect } from "react";
 
-const perPage = 2;
+const itemsPerPage = 5;
 
 export function ExpenseList() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { expenseList, fetching } = useSelector((state) => state.expenses);
-  const numberOfPages = Math.ceil(expenseList.length / perPage);
   const [isHidden, setIsHidden] = useState();
-  /*const list = expenseList.filter((el, i) => {
-    const index = i + 1;
-    if (index < currentPage * perPage) return el;
-  });
+  const { expenseList, fetching } = useSelector((state) => state.expenses);
+  const { currentPage, numberOfPages, changePage, items } = usePaging(
+    expenseList,
+    itemsPerPage
+  );
 
-  console.log(list);
-*/
+  useEffect(() => {
+    changePage(1);
+  }, [expenseList]);
+
   return (
     <div className={styles.container}>
       <Title
@@ -31,16 +33,26 @@ export function ExpenseList() {
           setIsHidden((prev) => !prev);
         }}
       />
-      <ul className={`${styles.list} ${isHidden ? styles.hidden : ""}`}>
-        {expenseList.map((expense) => (
-          <ExpenseItem key={expense.id} expense={expense} />
-        ))}
-      </ul>
-      <Pagination
-        currentPage={currentPage}
-        numberOfPages={numberOfPages}
-        perPage={perPage}
-      />
+      <div className={isHidden ? styles.hidden : ""}>
+        {items.length === 0 && !fetching && (
+          <p>There are no expenses. Congrats!</p>
+        )}
+        {!fetching && (
+          <ul className={`${styles.list}`}>
+            {items?.map((expense) => (
+              <ExpenseItem key={expense.id} expense={expense} />
+            ))}
+          </ul>
+        )}
+        {numberOfPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            numberOfPages={numberOfPages}
+            perPage={itemsPerPage}
+            changePage={changePage}
+          />
+        )}
+      </div>
       {fetching && <Spinner />}
     </div>
   );
