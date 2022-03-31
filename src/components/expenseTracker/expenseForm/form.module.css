@@ -1,0 +1,29 @@
+.container {
+  width: 100%;
+  margin: auto;
+}
+.form {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  transition: max-height 100ms;
+  overflow: hidden;
+  max-height: 500px;
+}
+
+.form input,
+.form textarea,
+.form select,
+.form button {
+  padding: 0.3rem 0.4rem;
+  border: 1px solid var(--color-medium);
+  border-radius: 5px;
+}
+
+.hidden {
+  max-height: 0;
+}
+.container textarea {
+  max-width: 100%;
+  max-height: 150px;
+}
