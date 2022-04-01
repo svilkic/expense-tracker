@@ -14,8 +14,6 @@ import {
 
 const initialState = {
   amount: 0,
-  //income: 0,
-  //expense: 0,
   expenseList: [],
   fetching: true,
 };
@@ -56,7 +54,7 @@ export const addExpense = createAsyncThunk(
     //Local
     //const { expenseList, amount } = addExpenseLocal(expense);
 
-    return { expenseList, amount: amount };
+    return { expenseList, amount };
   }
 );
 

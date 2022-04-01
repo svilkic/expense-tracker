@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { calculateAmount, getDateFromExpense } from "util/helpers";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -13,11 +14,15 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_API_ID || "",
 };
 
-const transactions_collection = "transakcije";
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+export const auth = getAuth();
+export const provider = new GoogleAuthProvider();
+provider.setCustomParameters({
+  prompt: "select_account",
+});
+const transactions_collection = "transakcije";
 
 export async function getDataByDate(month, year) {
   const docID = `${month}.${year}`;
@@ -37,11 +42,10 @@ export async function addExpense(expense) {
   let expenseList = [];
 
   if (response.exists()) {
-    expenseList = response.data();
+    const data = response.data();
+    expenseList = data.expenseList;
   }
-
   expenseList.push(expense);
-
   const newAmount = calculateAmount(expenseList);
   await setDoc(docRef, { expenseList: expenseList });
   return { expenseList, amount: newAmount };
