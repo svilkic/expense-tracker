@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchExpenses } from "store/slices/expenseSlice";
+import { Login } from "components/Login";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Tracker } from "./pages/Tracker";
 
 function App() {
-  const dispatch = useDispatch();
   const { dark } = useSelector((state) => state.ui);
-
-  useEffect(() => {
-    //dispatch(fetchExpenses([]));
-  }, []);
+  const { authenticated } = useSelector((state) => state.ui);
+  // const isAuthenticated = !!sessionStorage.getItem("Auth Token");
 
   useEffect(() => {
     const body = document.getElementsByTagName("body")[0];
@@ -19,7 +17,18 @@ function App() {
 
   return (
     <div className={dark ? "dark" : ""}>
-      <Tracker />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path='/'
+            element={authenticated ? <Tracker /> : <Navigate to='/login' />}
+          />
+          <Route
+            path='/login'
+            element={authenticated ? <Navigate to='/' /> : <Login />}
+          />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
