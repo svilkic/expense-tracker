@@ -7,11 +7,10 @@ import { useMemo } from "react";
 import { PiLegend, MemoizedLegend } from "./PiLegend";
 // Styles
 import styles from "./expenseChart.module.css";
-import { useEffect } from "react";
 import { Spinner } from "../ui/spinner";
 
 export function ExpenseChart() {
-  const [isHidden, setIsHidden] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
   const { expenseList, fetching } = useSelector((state) => state.expenses);
 
   //OPTIMIZE
@@ -26,7 +25,7 @@ export function ExpenseChart() {
   return (
     <div className={styles.container}>
       <Title
-        title="Expense Chart"
+        title='Expense Chart'
         hidden={isHidden}
         onClick={() => {
           setIsHidden((prev) => !prev);
@@ -43,7 +42,7 @@ export function ExpenseChart() {
             lineWidth={60}
             labelPosition={112}
             data={grouped}
-            text="aleksa"
+            text='aleksa'
           />
           <MemoizedLegend data={grouped} />
         </div>

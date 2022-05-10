@@ -7,6 +7,7 @@ import {
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import {
   db,
+  getDataByYear,
   getDataByDate as getDataByDateFirebase,
   addExpense as addExpenseFirebase,
   removeExpense as removeExpenseFirebase,
@@ -16,12 +17,13 @@ const initialState = {
   amount: 0,
   expenseList: [],
   fetching: true,
+  filterBy: "month",
 };
 
 //Get all epxenses
 export const fetchExpenses = createAsyncThunk(
   "expenses/fetchExpensesByDate",
-  async (thunkAPI) => {
+  async () => {
     let existing = localStorage.getItem("expensesList");
     let amount = parseFloat(localStorage.getItem("amount")) || 0;
     existing = existing ? JSON.parse(existing) : [];
@@ -32,13 +34,18 @@ export const fetchExpenses = createAsyncThunk(
 //Get epxenses by date
 export const fetchExpensesByDate = createAsyncThunk(
   "expenses/fetchExpensesByDate",
-  async ({ month, year }) => {
+  async ({ month, year }, thunkApi) => {
+    const filter = thunkApi.getState().expenses.filterBy;
     //Firebase
-    const { amount, expenseList } = await getDataByDateFirebase(month, year);
+    let result = {};
+    if (filter === "year") result = await getDataByYear(year);
+    else result = await getDataByDateFirebase(month, year);
     //Local
     //const expenseList = getDataByDateLocal(month, year);
 
-    let data = filterArrayByDate(expenseList, month, year);
+    const { amount, expenseList } = result;
+    let data = filterArrayByDate(expenseList, month, year, filter);
+
     //Local
     //let amount = calculateAmount(data);
     return { expenseList: data, amount };
@@ -76,6 +83,11 @@ const expenseSlice = createSlice({
   reducers: {
     setFetch: (state, action) => {
       state.fetching = false;
+    },
+    changeFilter(state) {
+      const { filterBy } = current(state);
+      if (filterBy === "month") state.filterBy = "year";
+      else if (filterBy === "year") state.filterBy = "month";
     },
   },
   extraReducers: (builder) => {
@@ -143,5 +155,5 @@ const removeDataLocal = (expense) => {
   return { expenseList, amount: calculatedAmount };
 };
 
-export const { setFetch } = expenseSlice.actions;
+export const { setFetch, changeFilter } = expenseSlice.actions;
 export const expenceReducer = expenseSlice.reducer;

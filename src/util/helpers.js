@@ -35,12 +35,14 @@ export function groupByAndSum(array, key) {
   return result;
 }
 
-export function filterArrayByDate(array, month, year) {
+export function filterArrayByDate(array, month, year, filter) {
   return array.filter((expense) => {
     const expenseDate = new Date(expense.date);
     const expenseMonth = expenseDate.getMonth() + 1;
     const expenseYear = expenseDate.getFullYear();
-    if (expenseMonth === month && expenseYear === year) return expense;
+    if (filter === "month" && expenseMonth === month && expenseYear === year)
+      return expense;
+    else if (filter === "year" && expenseYear === year) return expense;
   });
 }
 

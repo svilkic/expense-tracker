@@ -47,3 +47,9 @@
 .description::first-letter {
   text-transform: uppercase;
 }
+
+@media print {
+  .item {
+    border-bottom: 1px solid var(--color-light);
+  }
+}
