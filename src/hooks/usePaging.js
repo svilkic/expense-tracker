@@ -13,7 +13,7 @@ export const usePaging = (array, perPage = 10) => {
       }
       return arr;
     },
-    [currentPage]
+    [currentPage, perPage, array]
   );
 
   const items = list(array);

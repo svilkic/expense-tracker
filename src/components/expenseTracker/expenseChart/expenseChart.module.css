@@ -16,6 +16,12 @@
   display: none;
 }
 
+@media print {
+  .pychart {
+    width: 80%;
+  }
+}
+
 /* LEGENDS STYLE */
 
 .legends {

@@ -1,13 +1,14 @@
 import React from "react";
 // Styles
 import styles from "./navbar.module.css";
-import { BsFillMoonFill, BsFillSunFill } from "react-icons/bs";
+import { BsFillMoonFill, BsFillSunFill, BsCalendarMonth } from "react-icons/bs";
 import { BiLogIn } from "react-icons/bi";
+import { MdOutlinePictureAsPdf } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { changeDark, setUser } from "store/slices/uiSlice";
-import { setFetch } from "store/slices/expenseSlice";
+import { changeDark, printOn, setUser } from "store/slices/uiSlice";
 import { useNavigate } from "react-router-dom";
+import { changeFilter } from "store/slices/expenseSlice";
 
 export function ExpenseNavbar() {
   const dispatch = useDispatch();
@@ -17,20 +18,53 @@ export function ExpenseNavbar() {
   const handleThemeChange = () => {
     dispatch(changeDark());
   };
+
+  const generatePdf = () => {
+    dispatch(printOn());
+  };
+
+  const changeDataFilter = () => {
+    dispatch(changeFilter());
+  };
+
   return (
     <div className={styles.container}>
-      {dark ? (
-        <BsFillSunFill className={styles.button} onClick={handleThemeChange} />
-      ) : (
-        <BsFillMoonFill className={styles.button} onClick={handleThemeChange} />
-      )}
-      <BiLogIn
-        className={styles.button}
-        onClick={() => {
-          dispatch(setUser(false));
-          navigate("/login");
-        }}
-      />
+      <div className={styles.circle}>
+        {dark ? (
+          <BsFillSunFill
+            className={styles.button}
+            onClick={handleThemeChange}
+          />
+        ) : (
+          <BsFillMoonFill
+            className={styles.button}
+            onClick={handleThemeChange}
+          />
+        )}
+      </div>
+      <div style={{ display: "flex", gap: "1rem" }}>
+        <div className={styles.circle}>
+          <BsCalendarMonth
+            className={styles.button}
+            onClick={changeDataFilter}
+          />
+        </div>
+        <div className={styles.circle}>
+          <MdOutlinePictureAsPdf
+            className={styles.button}
+            onClick={generatePdf}
+          />
+        </div>
+        <div className={styles.circle}>
+          <BiLogIn
+            className={styles.button}
+            onClick={() => {
+              dispatch(setUser(false));
+              navigate("/login");
+            }}
+          />
+        </div>
+      </div>
       {/* <button onClick={() => dispatch(setFetch())}>Fetch False</button> */}
     </div>
   );

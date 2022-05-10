@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 // Libs
 import { IoMdArrowDropleft, IoMdArrowDropright } from "react-icons/io";
 import { fetchExpensesByDate } from "store/slices/expenseSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // Constants
 import { months } from "constants/dates";
 //Styles
@@ -13,6 +13,7 @@ const currentYear = new Date().getFullYear();
 
 export function DatePicker() {
   const dispatch = useDispatch();
+  const { filterBy } = useSelector((state) => state.expenses);
   const [month, setMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
 
@@ -20,17 +21,25 @@ export function DatePicker() {
     let newMonth = month;
     let newYear = year;
 
-    if (type === "+") {
-      newMonth += 1;
-      if (newMonth > 12) {
-        newMonth = 1;
-        newYear += 1;
+    if (filterBy === "year") {
+      if (type === "+") {
+        newYear++;
+      } else if (type === "-") {
+        newYear--;
       }
-    } else if (type === "-") {
-      newMonth -= 1;
-      if (newMonth < 1) {
-        newMonth = 12;
-        newYear -= 1;
+    } else {
+      if (type === "+") {
+        newMonth += 1;
+        if (newMonth > 12) {
+          newMonth = 1;
+          newYear += 1;
+        }
+      } else if (type === "-") {
+        newMonth -= 1;
+        if (newMonth < 1) {
+          newMonth = 12;
+          newYear -= 1;
+        }
       }
     }
     setMonth(newMonth);
@@ -51,14 +60,16 @@ export function DatePicker() {
     return () => {
       clearInterval(changeInterval);
     };
-  }, [month, year]);
+  }, [month, year, filterBy]);
+
+  const formattedDate =
+    filterBy === "month" ? `${months[month]} ${year}` : year;
 
   const RenderMonths = () => {
     return (
-      <span
-        className={styles.date}
-        onClick={resetDate}
-      >{`${months[month]} ${year}`}</span>
+      <span className={styles.date} onClick={resetDate}>
+        {formattedDate}
+      </span>
     );
   };
 

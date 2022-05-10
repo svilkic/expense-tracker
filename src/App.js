@@ -16,7 +16,7 @@ function App() {
   }, [dark]);
 
   return (
-    <div className={dark ? "dark" : ""}>
+    <div id='print' className={dark ? "dark" : ""}>
       <BrowserRouter>
         <Routes>
           <Route

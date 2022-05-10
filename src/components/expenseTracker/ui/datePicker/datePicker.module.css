@@ -30,3 +30,12 @@
 .button:hover {
   opacity: 0.5;
 }
+
+@media print {
+  .container {
+    margin: 0;
+  }
+  .button {
+    display: none;
+  }
+}

@@ -24,6 +24,27 @@ provider.setCustomParameters({
 });
 const transactions_collection = "transakcije";
 
+export async function getDataByYear(year) {
+  let data = [];
+  for (let i = 1; i <= 12; i++) {
+    const docID = `${i}.${year}`;
+    const expenseList = await getDataByID(docID);
+    data.push(...expenseList);
+  }
+  const newAmount = calculateAmount(data);
+  return { expenseList: data, amount: newAmount };
+}
+
+async function getDataByID(docID) {
+  const docRef = doc(db, transactions_collection, docID);
+  const response = await getDoc(docRef);
+  const exists = response.exists();
+  if (exists) {
+    const { expenseList } = response.data();
+    return expenseList;
+  } else return [];
+}
+
 export async function getDataByDate(month, year) {
   const docID = `${month}.${year}`;
   const response = await getDoc(doc(db, transactions_collection, docID));

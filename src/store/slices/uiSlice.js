@@ -7,7 +7,8 @@ const initialState = {
   dark: false,
   currentMonth,
   currentYear,
-  authenticated: false,
+  authenticated: true,
+  printMode: false,
 };
 
 const uiSlice = createSlice({
@@ -21,8 +22,16 @@ const uiSlice = createSlice({
       const { payload = true } = action;
       state.authenticated = payload;
     },
+    printOn(state) {
+      state.printMode = true;
+      state.dark = false;
+    },
+    printOff(state) {
+      state.printMode = false;
+      state.dark = true;
+    },
   },
 });
 
-export const { changeDark, setUser } = uiSlice.actions;
+export const { changeDark, setUser, printOn, printOff } = uiSlice.actions;
 export const uiReducer = uiSlice.reducer;
