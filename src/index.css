@@ -1,10 +1,33 @@
+.dark {
+  --color-dark: #e5e5e5 !important;
+  --color-medium: #999 !important;
+  --color-light: #333 !important;
+}
+:root {
+  --color-dark: #333;
+  --color-medium: #c2c2c2;
+  --color-light: #e6e6e6;
+  --color-primary: rgb(63, 109, 210);
+  --color-error: rgb(176, 53, 53);
+}
+@media (prefers-color-scheme) {
+  :root {
+    --color-dark: #e5e5e5 !important;
+    --color-medium: #999 !important;
+    --color-light: #333 !important;
+  }
+  .dark {
+    --color-dark: #333 !important;
+    --color-medium: #c2c2c2 !important;
+    --color-light: #e6e6e6 !important;
+  }
+}
 * {
   box-sizing: border-box;
 }
 body {
   margin: 0;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-light);
@@ -20,22 +43,7 @@ svg {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-
-:root {
-  --color-dark: #333;
-  --color-medium: rgb(194, 194, 194);
-  --color-light: #e6e6e6;
-  --color-primary: rgb(63, 109, 210);
-  --color-error: rgb(176, 53, 53);
-}
-
-.dark {
-  --color-dark: #e5e5e5 !important;
-  --color-medium: #999 !important;
-  --color-light: #333 !important;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 .error {
@@ -52,8 +60,4 @@ code {
     background-color: transparent;
     overflow: visible;
   }
-}
-
- {
-  fill: #fff !important;
 }

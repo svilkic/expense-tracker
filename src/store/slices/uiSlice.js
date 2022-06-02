@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const currentMonth = new Date().getMonth() + 1;
 const currentYear = new Date().getFullYear();
@@ -12,7 +12,7 @@ const initialState = {
 };
 
 const uiSlice = createSlice({
-  name: "ui",
+  name: 'ui',
   initialState,
   reducers: {
     changeDark(state) {
@@ -28,7 +28,6 @@ const uiSlice = createSlice({
     },
     printOff(state) {
       state.printMode = false;
-      state.dark = true;
     },
   },
 });
