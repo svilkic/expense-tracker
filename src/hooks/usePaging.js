@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from 'react';
 
 export const usePaging = (array, perPage = 10) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -23,5 +23,6 @@ export const usePaging = (array, perPage = 10) => {
     numberOfPages,
     changePage: setCurrentPage,
     items: items,
+    setCurrentPage,
   };
 };

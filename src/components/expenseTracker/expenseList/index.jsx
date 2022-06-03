@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 // Components
-import { ExpenseItem } from "./expenseItem";
-import { Title } from "components/expenseTracker/ui/title";
-import { Spinner } from "components/expenseTracker/ui/spinner";
-import { Pagination } from "./pagination";
-import { usePaging } from "hooks/usePaging";
+import { ExpenseItem } from './expenseItem';
+import { Title } from 'components/expenseTracker/ui/title';
+import { Spinner } from 'components/expenseTracker/ui/spinner';
+import { Pagination } from './pagination';
+import { usePaging } from 'hooks/usePaging';
 // Styles
-import styles from "./expenseList.module.css";
-import { useEffect } from "react";
-import { PageNumberList } from "./pageNumberList";
-import { printOff } from "store/slices/uiSlice";
+import styles from './expenseList.module.css';
+import { useEffect } from 'react';
+import { PageNumberList } from './pageNumberList';
+import { printOff } from 'store/slices/uiSlice';
 
 const defaultItemsPerPage = 5;
 
@@ -29,11 +29,12 @@ export function ExpenseList() {
 
   useEffect(() => {
     changePage(1);
-    console.log(expenseList);
+    // console.log(expenseList);
   }, [expenseList, filterBy]);
 
   useEffect(() => {
     if (printMode) {
+      changePage(1);
       setItemsPerPage(1000);
     }
   }, [printMode]);
@@ -46,6 +47,7 @@ export function ExpenseList() {
         setItemsPerPage(defaultItemsPerPage);
       }, 100);
     }
+    changePage(1);
   }, [itemsPerPage]);
 
   return (
@@ -57,7 +59,7 @@ export function ExpenseList() {
           setIsHidden((prev) => !prev);
         }}
       />
-      <div className={isHidden ? styles.hidden : ""}>
+      <div className={isHidden ? styles.hidden : ''}>
         {items.length === 0 && !fetching && (
           <p>There are no expenses. Congrats!</p>
         )}

@@ -10,7 +10,7 @@
   --color-primary: rgb(63, 109, 210);
   --color-error: rgb(176, 53, 53);
 }
-@media (prefers-color-scheme) {
+@media (prefers-color-scheme: white) {
   :root {
     --color-dark: #e5e5e5 !important;
     --color-medium: #999 !important;
@@ -27,7 +27,8 @@
 }
 body {
   margin: 0;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
+    'Lucida Sans', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-light);
@@ -43,7 +44,8 @@ svg {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 .error {

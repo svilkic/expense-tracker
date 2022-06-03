@@ -11,17 +11,9 @@ export const useAuth = (redirectNoUser, redirectYesUser) => {
   });
 
   useEffect(() => {
-    console.log('----Current-----');
-    console.log(auth.currentUser);
-    console.log('----------------');
-
     const unregisterAuthObserver = onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthState({ user, authenticated: !!user });
-        console.log('----Login-----');
-        const uid = user.uid;
-        console.log(uid);
-        console.log('--------------');
         if (redirectYesUser) navigate(redirectYesUser);
       } else {
         if (redirectNoUser) navigate(redirectNoUser);
@@ -34,10 +26,6 @@ export const useAuth = (redirectNoUser, redirectYesUser) => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setAuthState({ user, authenticated: !!user });
-        console.log('----Login-----');
-        const uid = user.uid;
-        console.log(uid);
-        console.log('--------------');
         if (YesUser) navigate(YesUser);
       } else {
         if (NoUser) navigate(NoUser);
